@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,8 +29,6 @@ public final class WorldRiptideCanceller extends JavaPlugin {
             getServer().getScheduler().runTaskTimer(this, new RiptedCancellerTask(this), 0, updateFrequency);
         }
         new RiptedListener(this);
-
-
     }
 
     @Override
@@ -91,59 +88,66 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                         this.initialize();
                         return true;
                     }
-                    return true;
-                case 2:
-                    switch (args[0]){
-                        case "setts":
-                            tpsThreshold = Double.parseDouble(args[1]);
-                            config = getConfig();
-                            config.set("tps_threshold", Double.parseDouble(args[1]));
-                            saveConfig();
-                            reloadConfig();
-                            sender.sendMessage(ChatColor.GRAY + "info: tpsが " + args[1] + " 以下で激流付きトライデントを制限します。");
-                            return true;
-                        case "setuf":
-                            updateFrequency = Integer.valueOf(args[1]).intValue();
-                            config = getConfig();
-                            config.set("update_frequency", Integer.valueOf(args[1]).intValue());
-                            saveConfig();
-                            reloadConfig();
-                            sender.sendMessage(ChatColor.GRAY + "info: tpsのスキャン頻度が " + args[1] + " になりました。");
-                            return true;
-                        case "setstartmessage":
-                            startMessage = args[1];
-                            config = getConfig();
-                            config.set("start_message", args[1]);
-                            saveConfig();
-                            reloadConfig();
-                            sender.sendMessage(ChatColor.GRAY + "info: 開始メッセージを更新しました。");
-                            return true;
-                        case "setendmessage":
-                            endMessage = args[1];
-                            config = getConfig();
-                            config.set("end_message", args[1]);
-                            saveConfig();
-                            reloadConfig();
-                            sender.sendMessage(ChatColor.GRAY + "info: 終了メッセージを更新しました。");
-                            return true;
-                        case "showtps":
-                            Player player = (Player)sender;
-                            if(args[1] == null) return true;
-                            Integer id = new RiptedCancellerTask(this, sender).
-                                    runTaskTimer(this,0,Integer.parseInt(args[1])).getTaskId();
-                            bukkitIdManager.put(player, id);
-                            return true;
-                        case "hidetps":
-                            Player player2 = (Player)sender;
-                            if(args[1] == null) return true;
-                            if(!this.bukkitIdManager.containsKey(player2)) return true;
+                    if(args[0].equalsIgnoreCase("hidetps")) {
+                        Player player2 = (Player) sender;
+                        if (this.bukkitIdManager.containsKey(player2)) {
+                            sender.sendMessage(ChatColor.GRAY + "info: 含まれています");
                             Integer usb = this.bukkitIdManager.get(player2);
                             this.getServer().getScheduler().cancelTask(usb);
                             return true;
+                        }
+                        return true;
                     }
                     return true;
-            }
-            return true;
+                    case 2:
+                        switch (args[0]) {
+                            case "setts":
+                                tpsThreshold = Double.parseDouble(args[1]);
+                                config = getConfig();
+                                config.set("tps_threshold", Double.parseDouble(args[1]));
+                                saveConfig();
+                                reloadConfig();
+                                sender.sendMessage(ChatColor.GRAY + "info: tpsが " + args[1] + " 以下で激流付きトライデントを制限します。");
+                                return true;
+                            case "setuf":
+                                updateFrequency = Integer.valueOf(args[1]).intValue();
+                                config = getConfig();
+                                config.set("update_frequency", Integer.valueOf(args[1]).intValue());
+                                saveConfig();
+                                reloadConfig();
+                                sender.sendMessage(ChatColor.GRAY + "info: tpsのスキャン頻度が " + args[1] + " になりました。");
+                                return true;
+                            case "setstartmessage":
+                                startMessage = args[1];
+                                config = getConfig();
+                                config.set("start_message", args[1]);
+                                saveConfig();
+                                reloadConfig();
+                                sender.sendMessage(ChatColor.GRAY + "info: 開始メッセージを更新しました。");
+                                return true;
+                            case "setendmessage":
+                                endMessage = args[1];
+                                config = getConfig();
+                                config.set("end_message", args[1]);
+                                saveConfig();
+                                reloadConfig();
+                                sender.sendMessage(ChatColor.GRAY + "info: 終了メッセージを更新しました。");
+                                return true;
+                            case "showtps":
+                                Player player = (Player) sender;
+                                if (args[1] == null) return true;
+                                if(bukkitIdManager.containsKey(player)) {
+                                    sender.sendMessage(ChatColor.GRAY + "info: 既に表示しています。");
+                                    return true;
+                                }
+                                Integer id = new RiptedCancellerTask(this, sender).
+                                        runTaskTimer(this, 0, Integer.parseInt(args[1])).getTaskId();
+                                bukkitIdManager.put(player, id);
+                                return true;
+                            }
+                            return true;
+                    }
+                return true;
         }
         return true;
     }
