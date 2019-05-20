@@ -11,10 +11,10 @@ import java.net.URL;
 
 public final class WorldRiptideCanceller extends JavaPlugin {
 
-    public static boolean isEnable = true;
-    public static String endMessage = "End message";
+    public static boolean isEnable    = true;
+    public static String endMessage   = "End message";
     public static String startMessage = "Start message";
-    public static int tpsThreshold = 15;
+    public static double tpsThreshold = 15;
     public static int updateFrequency = 40;
     private FileConfiguration config;
 
@@ -22,10 +22,10 @@ public final class WorldRiptideCanceller extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        saveDefaultConfig();
         this.initialize();
-        getServer().getScheduler().runTaskTimer(this, new RiptedCancellerTask(this), 0, updateFrequency);
-
+        if(isEnable) {
+            getServer().getScheduler().runTaskTimer(this, new RiptedCancellerTask(this), 0, updateFrequency);
+        }
         new RiptedListener(this);
 
 
@@ -41,7 +41,7 @@ public final class WorldRiptideCanceller extends JavaPlugin {
         /**
          *  AdminCommands
          */
-        if (command.getName().equalsIgnoreCase("wr")) {
+        if (command.getName().equalsIgnoreCase("wrc")) {
             // 権限をチェック
             if (!sender.hasPermission("worldriptidecanceller.command.wr")) {
                 sender.sendMessage(ChatColor.DARK_RED + command.getPermissionMessage());
@@ -67,27 +67,55 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                         sender.sendMessage(ChatColor.GRAY + "info: WorldRiptideCancellerが無効になりました。");
                         return true;
                     }
+                    if(args[0].equalsIgnoreCase("showp")) {
+                        config = getConfig();
+                        WorldRiptideCanceller.isEnable        = config.getBoolean("Enable");
+                        WorldRiptideCanceller.tpsThreshold    = config.getDouble ("tps_threshold");
+                        WorldRiptideCanceller.updateFrequency = config.getInt    ("update_frequency");
+                        WorldRiptideCanceller.startMessage    = config.getString ("start_message");
+                        WorldRiptideCanceller.endMessage      = config.getString ("end_message");
+                        sender.sendMessage(ChatColor.GRAY + "enable: "           + ChatColor.AQUA + isEnable);
+                        sender.sendMessage(ChatColor.GRAY + "tps_threshold: "    + ChatColor.AQUA + tpsThreshold);
+                        sender.sendMessage(ChatColor.GRAY + "update_frequency: " + ChatColor.AQUA + updateFrequency);
+                        sender.sendMessage(ChatColor.GRAY + "start_message: "    + ChatColor.AQUA + startMessage);
+                        sender.sendMessage(ChatColor.GRAY + "end_message: "      + ChatColor.AQUA + endMessage);
+                        saveConfig();
+                        reloadConfig();
+                        return true;
+                    }
+                    if(args[0].equalsIgnoreCase("reload")) {
+                        this.initialize();
+                        return true;
+                    }
                 case 2:
                     switch (args[0]){
                         case "setts":
-                            config.set("tps_threshold", Integer.valueOf(args[1]).intValue());
+                            tpsThreshold = Double.parseDouble(args[1]);
+                            config = getConfig();
+                            config.set("tps_threshold", Double.parseDouble(args[1]));
                             saveConfig();
                             reloadConfig();
                             sender.sendMessage(ChatColor.GRAY + "info: tpsが " + args[1] + " 以下で激流付きトライデントを制限します。");
                             return true;
                         case "setuf":
+                            updateFrequency = Integer.valueOf(args[1]).intValue();
+                            config = getConfig();
                             config.set("update_frequency", Integer.valueOf(args[1]).intValue());
                             saveConfig();
                             reloadConfig();
                             sender.sendMessage(ChatColor.GRAY + "info: tpsのスキャン頻度が " + args[1] + " になりました。");
                             return true;
                         case "setstartmessage":
+                            startMessage = args[1];
+                            config = getConfig();
                             config.set("start_message", args[1]);
                             saveConfig();
                             reloadConfig();
                             sender.sendMessage(ChatColor.GRAY + "info: 開始メッセージを更新しました。");
                             return true;
                         case "setendmessage":
+                            endMessage = args[1];
+                            config = getConfig();
                             config.set("end_message", args[1]);
                             saveConfig();
                             reloadConfig();
@@ -102,14 +130,14 @@ public final class WorldRiptideCanceller extends JavaPlugin {
     }
     public void initialize(){
         // config
-        saveDefaultConfig();
-        reloadConfig();
-        config = getConfig();
-        WorldRiptideCanceller.isEnable = config.getBoolean("Enable");
-        WorldRiptideCanceller.tpsThreshold = config.getInt("tps_threshold");
-        WorldRiptideCanceller.updateFrequency = config.getInt("update_frequency");
-        WorldRiptideCanceller.startMessage = config.getString("start_message");
-        WorldRiptideCanceller.endMessage = config.getString("end_message");
+        this.saveDefaultConfig();
+        this.reloadConfig();
+        this.config = getConfig();
+        WorldRiptideCanceller.isEnable        = this.config.getBoolean("Enable");
+        WorldRiptideCanceller.tpsThreshold    = this.config.getDouble ("tps_threshold");
+        WorldRiptideCanceller.updateFrequency = this.config.getInt    ("update_frequency");
+        WorldRiptideCanceller.startMessage    = this.config.getString ("start_message");
+        WorldRiptideCanceller.endMessage      = this.config.getString ("end_message");
         this.reloadConfig();
     }
 

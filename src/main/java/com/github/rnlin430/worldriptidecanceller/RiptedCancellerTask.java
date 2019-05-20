@@ -18,14 +18,13 @@ public class RiptedCancellerTask extends BukkitRunnable {
         plugin.getServer().broadcastMessage("§3" + String.valueOf(tps[1]));
         if(isRestricted){
             if(tps[0] <= WorldRiptideCanceller.tpsThreshold){
-                plugin.getServer().broadcastMessage("§3激流の使用が制限されています。");
-                System.out.println("§4激流の使用が制限されています。");
+                plugin.getServer().broadcastMessage(WorldRiptideCanceller.startMessage);
                 isRestricted = false;
             }
         }
         else if(!isRestricted) {
             if (tps[0] > WorldRiptideCanceller.tpsThreshold)
-                System.out.println("§3激流の使用が制限が解除されました。");
+                plugin.getServer().broadcastMessage(WorldRiptideCanceller.endMessage);
             isRestricted = true;
         }
     }
