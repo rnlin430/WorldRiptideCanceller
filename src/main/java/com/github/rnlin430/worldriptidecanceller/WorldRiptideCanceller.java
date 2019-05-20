@@ -4,10 +4,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 
 public final class WorldRiptideCanceller extends JavaPlugin {
 
@@ -17,7 +20,7 @@ public final class WorldRiptideCanceller extends JavaPlugin {
     public static double tpsThreshold = 15;
     public static int updateFrequency = 40;
     private FileConfiguration config;
-
+    private static HashMap<Player, Integer> bukkitIdManager = new HashMap<Player, Integer>();
 
     @Override
     public void onEnable() {
@@ -83,10 +86,12 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                         reloadConfig();
                         return true;
                     }
+
                     if(args[0].equalsIgnoreCase("reload")) {
                         this.initialize();
                         return true;
                     }
+                    return true;
                 case 2:
                     switch (args[0]){
                         case "setts":
@@ -120,6 +125,20 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                             saveConfig();
                             reloadConfig();
                             sender.sendMessage(ChatColor.GRAY + "info: 終了メッセージを更新しました。");
+                            return true;
+                        case "showtps":
+                            Player player = (Player)sender;
+                            if(args[1] == null) return true;
+                            Integer id = new RiptedCancellerTask(this, sender).
+                                    runTaskTimer(this,0,Integer.parseInt(args[1])).getTaskId();
+                            bukkitIdManager.put(player, id);
+                            return true;
+                        case "hidetps":
+                            Player player2 = (Player)sender;
+                            if(args[1] == null) return true;
+                            if(!this.bukkitIdManager.containsKey(player2)) return true;
+                            Integer usb = this.bukkitIdManager.get(player2);
+                            this.getServer().getScheduler().cancelTask(usb);
                             return true;
                     }
                     return true;
