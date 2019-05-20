@@ -25,6 +25,7 @@ public class RiptedListener implements Listener {
 
     @EventHandler
     public void onTridentClick(PlayerInteractEvent e) {
+        if(!WorldRiptideCanceller.isEnable) return;
         if(RiptedCancellerTask.isRestricted) return;
         Player player = e.getPlayer();
         Action ac = e.getAction();

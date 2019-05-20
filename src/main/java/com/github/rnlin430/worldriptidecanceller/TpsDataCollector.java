@@ -2,11 +2,11 @@ package com.github.rnlin430.worldriptidecanceller;
 
 import java.lang.reflect.Field;
 
-public class Reflection {
+public class TpsDataCollector {
     private com.github.rnlin430.worldriptidecanceller.WorldRiptideCanceller plugin;
     private double[] recentTps;
 
-    public Reflection(com.github.rnlin430.worldriptidecanceller.WorldRiptideCanceller plugin){
+    public TpsDataCollector(com.github.rnlin430.worldriptidecanceller.WorldRiptideCanceller plugin){
         this.plugin = plugin;
     }
 
