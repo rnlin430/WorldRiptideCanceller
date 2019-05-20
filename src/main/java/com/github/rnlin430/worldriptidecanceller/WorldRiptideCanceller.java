@@ -25,9 +25,9 @@ public final class WorldRiptideCanceller extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         this.initialize();
-        if(isEnable) {
-            getServer().getScheduler().runTaskTimer(this, new RiptedCancellerTask(this), 0, updateFrequency);
-        }
+
+        getServer().getScheduler().runTaskTimer(this, new RiptedCancellerTask(this), 0, updateFrequency);
+
         new RiptedListener(this);
     }
 
@@ -91,8 +91,8 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                     if(args[0].equalsIgnoreCase("hidetps")) {
                         Player player2 = (Player) sender;
                         if (this.bukkitIdManager.containsKey(player2)) {
-                            sender.sendMessage(ChatColor.GRAY + "info: 含まれています");
                             Integer usb = this.bukkitIdManager.get(player2);
+                            this.bukkitIdManager.remove(player2);
                             this.getServer().getScheduler().cancelTask(usb);
                             return true;
                         }
