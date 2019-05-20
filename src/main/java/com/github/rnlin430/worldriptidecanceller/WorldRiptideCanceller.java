@@ -1,12 +1,11 @@
 package com.github.rnlin430.worldriptidecanceller;
 
+import com.sun.deploy.config.DefaultConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import sun.plugin.services.WPlatformService;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,6 +27,7 @@ public final class WorldRiptideCanceller extends JavaPlugin {
 
         new com.github.rnlin430.worldriptidecanceller.RiptedListener(this);
 
+        saveDefaultConfig();
         this.initialize();
     }
 
