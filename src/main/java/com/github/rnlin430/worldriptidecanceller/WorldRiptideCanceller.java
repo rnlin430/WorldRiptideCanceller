@@ -22,12 +22,13 @@ public final class WorldRiptideCanceller extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        getServer().getScheduler().runTaskTimer(this, new RiptedCancellerTask(this), 0, updateFrequency);
-
-        new com.github.rnlin430.worldriptidecanceller.RiptedListener(this);
-
         saveDefaultConfig();
         this.initialize();
+        getServer().getScheduler().runTaskTimer(this, new RiptedCancellerTask(this), 0, updateFrequency);
+
+        new RiptedListener(this);
+
+
     }
 
     @Override

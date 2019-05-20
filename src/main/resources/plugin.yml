@@ -1,6 +1,6 @@
 name: WorldRiptideCanceller
 version: @version@
-main: com.github.rnlin430.canceller.riptide.world.WorldRiptideCanceller
+main: com.github.rnlin430.worldriptidecanceller.WorldRiptideCanceller
 api-version: 1.13.2
 description: WorldRiptideCanceller
 
