@@ -1,6 +1,5 @@
 package com.github.rnlin430.worldriptidecanceller;
 
-import com.sun.deploy.config.DefaultConfig;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
