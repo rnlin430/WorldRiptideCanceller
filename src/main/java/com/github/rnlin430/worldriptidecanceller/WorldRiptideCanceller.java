@@ -54,6 +54,8 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                     break;
                 case 1:
                     if (args[0].equalsIgnoreCase("true")) {
+                        isEnable = true;
+                        config = getConfig();
                         config.set("Enable", true);
                         saveConfig();
                         reloadConfig();
@@ -61,6 +63,8 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                         return true;
                     }
                     if (args[0].equalsIgnoreCase("false")) {
+                        isEnable = false;
+                        config = getConfig();
                         config.set("Enable", false);
                         saveConfig();
                         reloadConfig();
@@ -98,7 +102,28 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                         }
                         return true;
                     }
-                    return true;
+                    if(args[0].equalsIgnoreCase("commands")) {
+                        sender.sendMessage(ChatColor.WHITE + "/wrc commands");
+                        sender.sendMessage(ChatColor.AQUA + "コマンド一覧。");
+                        sender.sendMessage(ChatColor.WHITE + "/wrc [true|false]");
+                        sender.sendMessage(ChatColor.AQUA + "trueで激流に制限がかかります。");
+                        sender.sendMessage(ChatColor.WHITE + "/wrc showp");
+                        sender.sendMessage(ChatColor.AQUA + "現在の設定値です。");
+                        sender.sendMessage(ChatColor.WHITE + "/wrc reload");
+                        sender.sendMessage(ChatColor.AQUA + "configをリロードします。");
+                        sender.sendMessage(ChatColor.WHITE + "/wrc setts <閾値>");
+                        sender.sendMessage(ChatColor.AQUA + "閾値を下回ったら制限を開始します。");
+                        sender.sendMessage(ChatColor.WHITE + "/wrc setuf <tpsスキャン頻度>");
+                        sender.sendMessage(ChatColor.AQUA + "TPS");
+                        sender.sendMessage(ChatColor.WHITE + "/wrc setstartmessage <スタートメッセージ>");
+                        sender.sendMessage(ChatColor.AQUA + "制限開始時のメッセージを編集します。");
+                        sender.sendMessage(ChatColor.WHITE + "/wrc setendmessage <エンドメッセージ>" );
+                        sender.sendMessage(ChatColor.AQUA + "制限終了時のメッセージを編集します。");
+                        sender.sendMessage(ChatColor.WHITE + "/wrc showtps <更新頻度>");
+                        sender.sendMessage(ChatColor.AQUA + "現在のtpsを指定更新頻度で表示し続けます。");
+                        return true;
+                    }
+                    return false;
                     case 2:
                         switch (args[0]) {
                             case "setts":
@@ -145,11 +170,11 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                                 bukkitIdManager.put(player, id);
                                 return true;
                             }
-                            return true;
+                            return false;
                     }
-                return true;
+                return false;
         }
-        return true;
+        return false;
     }
     public void initialize(){
         // config
