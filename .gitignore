@@ -31,6 +31,7 @@ cmake-build-*/
 
 # IntelliJ
 out/
+build/
 
 # Eclipse
 bin/
