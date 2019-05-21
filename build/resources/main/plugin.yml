@@ -1,5 +1,5 @@
 name: WorldRiptideCanceller
-version: 1.0-SNAPSHOT
+version: 1.0-SNAPSHOT-9-ge62878c-SNAPSHOT+dirty
 main: com.github.rnlin430.worldriptidecanceller.WorldRiptideCanceller
 api-version: 1.13
 description: WorldRiptideCanceller
@@ -9,14 +9,15 @@ commands:
     description: It's main commands of this plugin.
     aliases: [wr]
     usage:
-      /<command> [true|false] - 有効と無効を切り替えます。
+      /<command>
+      /wr
     permisson: worldriptidecanceller.command.wr
     permission-message: You don't have the permission "<permission>".
 
 
 permissions:
   worldriptidecanceller.command.wr:
-    description: wrコマンドの使用権限
+    description: wrcコマンドの使用権限
     default: op
 
 

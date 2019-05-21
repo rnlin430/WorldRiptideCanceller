@@ -1,7 +1,8 @@
 apply plugin: 'java'
+version = pluginVersion
 apply from: 'version.gradle'
 group = pluginGroup
-version = pluginVersion
+
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
