@@ -1,6 +1,6 @@
 # update_frequency (tick/second)
 enable: true
-tps_threshold: 18
+tps_threshold: 17
 update_frequency: 40
 start_message: "§l§nStart message"
 end_message: "§l§nEnd message"
