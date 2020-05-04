@@ -1,8 +1,9 @@
 apply plugin: 'java'
 version = pluginVersion
-apply from: 'version.gradle'
+//apply from: 'version.gradle'
 group = pluginGroup
 
+def pluginsPath = "G:\\minecraftserver\\Spigot1.15.2\\plugins"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -19,9 +20,30 @@ repositories {
     }
 }
 
+task cleanLibs(type: Delete) {
+    println 'cleanLibsTask Start'
+    setDelete file("${buildDir}/libs").listFiles().findAll{it.name.endsWith(".jar")}
+    println 'cleanLibsTask End'
+}
+
+task updateDependency(type: Copy) {
+    println 'updateDependency Start'
+    from "${pluginsPath}"
+    into "lib/"
+    include "*.jar"
+    println 'updateDependency End'
+}
+
+task copyPluginToTestserver(dependsOn: ['build'], type: Copy) {
+    from "${buildDir}/libs"
+    into "${pluginsPath}"
+    include "*.jar"
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile 'org.spigotmc:spigot-api:1.13.2-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
+    compile 'org.jetbrains:annotations:16.0.2'
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens

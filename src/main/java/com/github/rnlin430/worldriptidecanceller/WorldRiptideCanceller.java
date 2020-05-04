@@ -16,7 +16,7 @@ public final class WorldRiptideCanceller extends JavaPlugin {
     public static boolean isEnable    = true;
     public static String endMessage   = "End message";
     public static String startMessage = "Start message";
-    public static double tpsThreshold = 15;
+    public static double tpsThreshold = 17;
     public static int updateFrequency = 40;
     private FileConfiguration config;
     private static HashMap<Player, Integer> bukkitIdManager = new HashMap<Player, Integer>();
@@ -26,8 +26,9 @@ public final class WorldRiptideCanceller extends JavaPlugin {
         // Plugin startup logic
         this.initialize();
 
-        getServer().getScheduler().runTaskTimer(this, new RiptedCancellerTask(this), 0, updateFrequency);
+        new RiptedCancellerTask(this).runTaskTimer(this, updateFrequency, updateFrequency);
 
+        //getServer().getScheduler().runTaskTimer(this, new RiptedCancellerTask(this), 0, updateFrequency);
         new RiptedListener(this);
     }
 
@@ -71,7 +72,7 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                         sender.sendMessage(ChatColor.GRAY + "info: WorldRiptideCancellerが無効になりました。");
                         return true;
                     }
-                    if(args[0].equalsIgnoreCase("showp")) {
+                    if(args[0].equalsIgnoreCase("info")) {
                         config = getConfig();
                         WorldRiptideCanceller.isEnable        = config.getBoolean("Enable");
                         WorldRiptideCanceller.tpsThreshold    = config.getDouble ("tps_threshold");
@@ -107,7 +108,7 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                         sender.sendMessage(ChatColor.AQUA + "コマンド一覧。");
                         sender.sendMessage(ChatColor.WHITE + "/wrc [true|false]");
                         sender.sendMessage(ChatColor.AQUA + "trueで激流に制限がかかります。");
-                        sender.sendMessage(ChatColor.WHITE + "/wrc showp");
+                        sender.sendMessage(ChatColor.WHITE + "/wrc info");
                         sender.sendMessage(ChatColor.AQUA + "現在の設定値です。");
                         sender.sendMessage(ChatColor.WHITE + "/wrc reload");
                         sender.sendMessage(ChatColor.AQUA + "configをリロードします。");
@@ -122,6 +123,20 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                         sender.sendMessage(ChatColor.WHITE + "/wrc showtps <更新頻度>");
                         sender.sendMessage(ChatColor.AQUA + "現在のtpsを指定更新頻度で表示し続けます。");
                         return true;
+                    }
+                    if(args[0].equalsIgnoreCase("showtps")) {
+                            Player player = (Player) sender;
+                            if(bukkitIdManager.containsKey(player)) {
+                                sender.sendMessage(ChatColor.GRAY + "tps表示をオフにしました。");
+                                int id = bukkitIdManager.get(player);
+                                this.getServer().getScheduler().cancelTask(id);
+                                bukkitIdManager.remove(player);
+                                return true;
+                            }
+                            Integer id = new RiptedCancellerTask(this, sender).
+                                    runTaskTimer(this, 0, 200).getTaskId();
+                            bukkitIdManager.put(player, id);
+                            return true;
                     }
                     return false;
                     case 2:
@@ -162,7 +177,7 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                                 Player player = (Player) sender;
                                 if (args[1] == null) return true;
                                 if(bukkitIdManager.containsKey(player)) {
-                                    sender.sendMessage(ChatColor.GRAY + "info: 既に表示しています。");
+                                    sender.sendMessage(ChatColor.GRAY + "既に表示しています。\n/wrc showtps で一度オフにしてから実行してください。");
                                     return true;
                                 }
                                 Integer id = new RiptedCancellerTask(this, sender).
