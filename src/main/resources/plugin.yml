@@ -16,8 +16,11 @@ commands:
 
 
 permissions:
-  worldriptidecanceller.command.wr:
-    description: wrcコマンドの使用権限
+  worldriptidecanceller.command.wrc:
+    description: wrc command
+    default: op
+  worldriptidecanceller.ignoreriptidecancell:
+    description: ignore riptide cancellation
     default: op
 
 

@@ -4,17 +4,17 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class RiptedCancellerTask extends BukkitRunnable {
+public class RiptideCancellerTask extends BukkitRunnable {
     private WorldRiptideCanceller plugin;
     public static boolean isRestricted = true;
     private CommandSender sender;
 
-    public RiptedCancellerTask(WorldRiptideCanceller plugin){
+    public RiptideCancellerTask(WorldRiptideCanceller plugin){
         this(plugin, null);
         this.plugin = plugin;
     }
 
-    public RiptedCancellerTask(WorldRiptideCanceller plugin, CommandSender sender){
+    public RiptideCancellerTask(WorldRiptideCanceller plugin, CommandSender sender){
         this.sender = sender;
         this.plugin = plugin;
     }
