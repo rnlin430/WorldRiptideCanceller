@@ -1,23 +1,29 @@
 package com.github.rnlin430.worldriptidecanceller;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.Console;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
 public final class WorldRiptideCanceller extends JavaPlugin {
 
-    public static boolean isEnable    = true;
-    public static String endMessage   = "End message";
-    public static String startMessage = "Start message";
-    public static double tpsThreshold = 17;
-    public static int updateFrequency = 40;
+    public static boolean isEnable      = true;
+    public static String endMessage     = "End message";
+    public static String startMessage   = "Start message";
+    public static String cancelMessage  = "canceled";
+    public static double tpsThreshold   = 17;
+    public static int updateFrequency   = 40;
     private FileConfiguration config;
     private static HashMap<Player, Integer> bukkitIdManager = new HashMap<Player, Integer>();
 
@@ -26,10 +32,13 @@ public final class WorldRiptideCanceller extends JavaPlugin {
         // Plugin startup logic
         this.initialize();
 
-        new RiptedCancellerTask(this).runTaskTimer(this, updateFrequency, updateFrequency);
+        new RiptideCancellerTask(this).runTaskTimer(this, updateFrequency, updateFrequency);
 
-        //getServer().getScheduler().runTaskTimer(this, new RiptedCancellerTask(this), 0, updateFrequency);
-        new RiptedListener(this);
+        new RiptideListener(this);
+
+        PluginManager pm = Bukkit.getPluginManager();
+        Permission p = new Permission("worldriptidecanceller.ignoreriptidecancell");
+        pm.addPermission(p);
     }
 
     @Override
@@ -60,7 +69,7 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                         config.set("Enable", true);
                         saveConfig();
                         reloadConfig();
-                        sender.sendMessage(ChatColor.GRAY + "info: WorldRiptideCancellerが有効になりました。");
+                        sender.sendMessage(ChatColor.GRAY + "[INFO] WorldRiptideCancellerが有効になりました。");
                         return true;
                     }
                     if (args[0].equalsIgnoreCase("false")) {
@@ -69,7 +78,7 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                         config.set("Enable", false);
                         saveConfig();
                         reloadConfig();
-                        sender.sendMessage(ChatColor.GRAY + "info: WorldRiptideCancellerが無効になりました。");
+                        sender.sendMessage(ChatColor.GRAY + "[INFO] WorldRiptideCancellerが無効になりました。");
                         return true;
                     }
                     if(args[0].equalsIgnoreCase("info")) {
@@ -79,18 +88,25 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                         WorldRiptideCanceller.updateFrequency = config.getInt    ("update_frequency");
                         WorldRiptideCanceller.startMessage    = config.getString ("start_message");
                         WorldRiptideCanceller.endMessage      = config.getString ("end_message");
+                        WorldRiptideCanceller.cancelMessage   = config.getString ("cancel_message");
+                        sender.sendMessage(ChatColor.GRAY + "[" +  ChatColor.BLUE + "WRC" + ChatColor.GRAY + "]");
                         sender.sendMessage(ChatColor.GRAY + "enable: "           + ChatColor.AQUA + isEnable);
                         sender.sendMessage(ChatColor.GRAY + "tps_threshold: "    + ChatColor.AQUA + tpsThreshold);
                         sender.sendMessage(ChatColor.GRAY + "update_frequency: " + ChatColor.AQUA + updateFrequency);
                         sender.sendMessage(ChatColor.GRAY + "start_message: "    + ChatColor.AQUA + startMessage);
                         sender.sendMessage(ChatColor.GRAY + "end_message: "      + ChatColor.AQUA + endMessage);
+                        sender.sendMessage(ChatColor.GRAY + "cancel_message: "   + ChatColor.AQUA + cancelMessage);
                         saveConfig();
                         reloadConfig();
                         return true;
                     }
 
                     if(args[0].equalsIgnoreCase("reload")) {
+                        reloadConfig();
                         this.initialize();
+                        sender.sendMessage(ChatColor.GRAY + "[INFO] リロードしました。");
+                        if (sender instanceof ConsoleCommandSender) return true;
+                        info("リロードしました。");
                         return true;
                     }
                     if(args[0].equalsIgnoreCase("hidetps")) {
@@ -120,6 +136,8 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                         sender.sendMessage(ChatColor.AQUA + "制限開始時のメッセージを編集します。");
                         sender.sendMessage(ChatColor.WHITE + "/wrc setendmessage <エンドメッセージ>" );
                         sender.sendMessage(ChatColor.AQUA + "制限終了時のメッセージを編集します。");
+                        sender.sendMessage(ChatColor.WHITE + "/wrc setcancelmessage <エンドメッセージ>" );
+                        sender.sendMessage(ChatColor.AQUA + "激流キャンセル時のメッセージを編集します。");
                         sender.sendMessage(ChatColor.WHITE + "/wrc showtps <更新頻度>");
                         sender.sendMessage(ChatColor.AQUA + "現在のtpsを指定更新頻度で表示し続けます。");
                         return true;
@@ -127,13 +145,13 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                     if(args[0].equalsIgnoreCase("showtps")) {
                             Player player = (Player) sender;
                             if(bukkitIdManager.containsKey(player)) {
-                                sender.sendMessage(ChatColor.GRAY + "tps表示をオフにしました。");
+                                sender.sendMessage(ChatColor.GRAY + "[INFO] tps表示をオフにしました。");
                                 int id = bukkitIdManager.get(player);
                                 this.getServer().getScheduler().cancelTask(id);
                                 bukkitIdManager.remove(player);
                                 return true;
                             }
-                            Integer id = new RiptedCancellerTask(this, sender).
+                            Integer id = new RiptideCancellerTask(this, sender).
                                     runTaskTimer(this, 0, 200).getTaskId();
                             bukkitIdManager.put(player, id);
                             return true;
@@ -147,7 +165,7 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                                 config.set("tps_threshold", Double.parseDouble(args[1]));
                                 saveConfig();
                                 reloadConfig();
-                                sender.sendMessage(ChatColor.GRAY + "info: tpsが " + args[1] + " 以下で激流付きトライデントを制限します。");
+                                sender.sendMessage(ChatColor.GRAY + "[INFO] tpsが " + args[1] + " 以下で激流付きトライデントを制限します。");
                                 return true;
                             case "setuf":
                                 updateFrequency = Integer.valueOf(args[1]).intValue();
@@ -155,32 +173,43 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                                 config.set("update_frequency", Integer.valueOf(args[1]).intValue());
                                 saveConfig();
                                 reloadConfig();
-                                sender.sendMessage(ChatColor.GRAY + "info: tpsのスキャン頻度が " + args[1] + " になりました。");
+                                sender.sendMessage(ChatColor.GRAY + "[INFO] tpsのスキャン頻度が " + args[1] + " になりました。");
                                 return true;
                             case "setstartmessage":
-                                startMessage = args[1];
+                                String sm = args[1].replace("&", "§");
+                                startMessage = sm;
                                 config = getConfig();
-                                config.set("start_message", args[1]);
+                                config.set("start_message", sm);
                                 saveConfig();
                                 reloadConfig();
-                                sender.sendMessage(ChatColor.GRAY + "info: 開始メッセージを更新しました。");
+                                sender.sendMessage(ChatColor.GRAY + "[INFO] 開始メッセージを更新しました。");
                                 return true;
                             case "setendmessage":
-                                endMessage = args[1];
+                                String em = args[1].replace("&", "§");
+                                endMessage = em;
                                 config = getConfig();
-                                config.set("end_message", args[1]);
+                                config.set("end_message", em);
                                 saveConfig();
                                 reloadConfig();
-                                sender.sendMessage(ChatColor.GRAY + "info: 終了メッセージを更新しました。");
+                                sender.sendMessage(ChatColor.GRAY + "[INFO] 終了メッセージを更新しました。");
+                                return true;
+                            case "setcancelmessage":
+                                String cm = args[1].replace("&", "§");
+                                endMessage = cm;
+                                config = getConfig();
+                                config.set("cancel_message", cm);
+                                saveConfig();
+                                reloadConfig();
+                                sender.sendMessage(ChatColor.GRAY + "[INFO] キャンセル時のメッセージを更新しました。");
                                 return true;
                             case "showtps":
                                 Player player = (Player) sender;
                                 if (args[1] == null) return true;
                                 if(bukkitIdManager.containsKey(player)) {
-                                    sender.sendMessage(ChatColor.GRAY + "既に表示しています。\n/wrc showtps で一度オフにしてから実行してください。");
+                                    sender.sendMessage(ChatColor.GRAY + "[INFO] 既に表示しています。\n/wrc showtps で一度オフにしてから実行してください。");
                                     return true;
                                 }
-                                Integer id = new RiptedCancellerTask(this, sender).
+                                Integer id = new RiptideCancellerTask(this, sender).
                                         runTaskTimer(this, 0, Integer.parseInt(args[1])).getTaskId();
                                 bukkitIdManager.put(player, id);
                                 return true;
@@ -196,17 +225,18 @@ public final class WorldRiptideCanceller extends JavaPlugin {
         this.saveDefaultConfig();
         this.reloadConfig();
         this.config = getConfig();
-        WorldRiptideCanceller.isEnable        = this.config.getBoolean("Enable");
+        WorldRiptideCanceller.isEnable        = this.config.getBoolean("enable");
         WorldRiptideCanceller.tpsThreshold    = this.config.getDouble ("tps_threshold");
         WorldRiptideCanceller.updateFrequency = this.config.getInt    ("update_frequency");
         WorldRiptideCanceller.startMessage    = this.config.getString ("start_message");
         WorldRiptideCanceller.endMessage      = this.config.getString ("end_message");
+        WorldRiptideCanceller.cancelMessage   = this.config.getString ("cancel_message");
         this.reloadConfig();
     }
 
     private void displayInfo(CommandSender sender) {
         sender.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "- WorldRiptideCanceller -");
-        sender.sendMessage(ChatColor.WHITE + "Spigotバージョン : 1.13.2");
+        sender.sendMessage(ChatColor.WHITE + "SpigotAPIバージョン : " + getDescription().getAPIVersion());
         sender.sendMessage(ChatColor.WHITE + "Pluginバージョン : " + getDescription().getVersion());
         sender.sendMessage(ChatColor.RED + "ダウンロードURL : " + getSiteURL());
         sender.sendMessage(ChatColor.DARK_BLUE + "Developed by rnlin(Twitter: @rnlin)");
