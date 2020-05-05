@@ -25,38 +25,9 @@ public class RiptideListener implements Listener {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
-//
-//    @EventHandler
-//    public void onTridentClick(PlayerInteractEvent e) {
-//        if(!WorldRiptideCanceller.isEnable) return;
-//        if(RiptideCancellerTask.isRestricted) return;
-//        Player player = e.getPlayer();
-//        //if(player.isOp()) return;
-//        Action ac = e.getAction();
-//        if(!(ac == Action.RIGHT_CLICK_AIR || ac == Action.RIGHT_CLICK_BLOCK)) return;
-//        ItemStack is = player.getInventory().getItemInMainHand();
-//        if (is.getType() != Material.TRIDENT) return;
-//        Map<Enchantment, Integer> ec = is.getEnchantments();
-//        for(Enchantment enchantment : ec.keySet()) {
-//            if (enchantment.equals(RIPTIDE)) {
-//                e.setCancelled(true);
-//                new BukkitRunnable() {
-//
-//                    @Override
-//                    public void run() {
-//                        System.out.println("run");
-//                        e.getPlayer().setVelocity(new Vector(0,0,0));
-//                    }
-//                }.runTaskLater(plugin, 1);
-//
-//                break;
-//            }
-//        }
-//    }
 
     @EventHandler
     public void onPlayerRiptide (PlayerRiptideEvent e) {
-        System.out.println("PlayerRiptideEvent");
         if(!WorldRiptideCanceller.isEnable) return;
         if(RiptideCancellerTask.isRestricted) return;
         Player player = e.getPlayer();
@@ -67,6 +38,7 @@ public class RiptideListener implements Listener {
             public void run() {
                 player.setVelocity(new Vector(0,0,0));
                 player.teleport(from);
+                if (WorldRiptideCanceller.cancelMessage == null) return;
                 player.sendMessage(WorldRiptideCanceller.cancelMessage);
             }
         }.runTaskLater(plugin, 1);

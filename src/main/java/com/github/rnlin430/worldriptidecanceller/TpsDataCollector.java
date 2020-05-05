@@ -12,9 +12,9 @@ public class TpsDataCollector {
 
     private Class<?> getReflectionClass(String s){
         Class<?> c = null;
-        try{
+        try {
             c = Class.forName(s);
-        }catch(ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return c;
