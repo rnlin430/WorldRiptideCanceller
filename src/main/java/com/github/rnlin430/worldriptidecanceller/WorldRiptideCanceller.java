@@ -19,9 +19,9 @@ import java.util.HashMap;
 public final class WorldRiptideCanceller extends JavaPlugin {
 
     public static boolean isEnable      = true;
-    public static String endMessage     = "End message";
-    public static String startMessage   = "Start message";
-    public static String cancelMessage  = "canceled";
+    public static String endMessage     = null;
+    public static String startMessage   = null;
+    public static String cancelMessage  = null;
     public static double tpsThreshold   = 17;
     public static int updateFrequency   = 40;
     private FileConfiguration config;
@@ -84,9 +84,9 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                         WorldRiptideCanceller.isEnable        = config.getBoolean("Enable");
                         WorldRiptideCanceller.tpsThreshold    = config.getDouble ("tps_threshold");
                         WorldRiptideCanceller.updateFrequency = config.getInt    ("update_frequency");
-                        WorldRiptideCanceller.startMessage    = config.getString ("start_message");
-                        WorldRiptideCanceller.endMessage      = config.getString ("end_message");
-                        WorldRiptideCanceller.cancelMessage   = config.getString ("cancel_message");
+                        WorldRiptideCanceller.startMessage    = config.getString ("start_message", null);
+                        WorldRiptideCanceller.endMessage      = config.getString ("end_message", null);
+                        WorldRiptideCanceller.cancelMessage   = config.getString ("cancel_message", null);
                         sender.sendMessage(ChatColor.GRAY + "[" +  ChatColor.BLUE + "WRC" + ChatColor.GRAY + "]");
                         sender.sendMessage(ChatColor.GRAY + "enable: "           + ChatColor.AQUA + isEnable);
                         sender.sendMessage(ChatColor.GRAY + "tps_threshold: "    + ChatColor.AQUA + tpsThreshold);
