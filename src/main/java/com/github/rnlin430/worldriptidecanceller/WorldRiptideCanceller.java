@@ -37,8 +37,6 @@ public final class WorldRiptideCanceller extends JavaPlugin {
         new RiptideListener(this);
 
         PluginManager pm = Bukkit.getPluginManager();
-        Permission p = new Permission("worldriptidecanceller.ignoreriptidecancell");
-        pm.addPermission(p);
     }
 
     @Override
@@ -66,7 +64,7 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                     if (args[0].equalsIgnoreCase("true")) {
                         isEnable = true;
                         config = getConfig();
-                        config.set("Enable", true);
+                        config.set("enable", true);
                         saveConfig();
                         reloadConfig();
                         sender.sendMessage(ChatColor.GRAY + "[INFO] WorldRiptideCancellerが有効になりました。");
@@ -75,7 +73,7 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                     if (args[0].equalsIgnoreCase("false")) {
                         isEnable = false;
                         config = getConfig();
-                        config.set("Enable", false);
+                        config.set("enable", false);
                         saveConfig();
                         reloadConfig();
                         sender.sendMessage(ChatColor.GRAY + "[INFO] WorldRiptideCancellerが無効になりました。");
@@ -177,29 +175,42 @@ public final class WorldRiptideCanceller extends JavaPlugin {
                                 return true;
                             case "setstartmessage":
                                 String sm = args[1].replace("&", "§");
-                                startMessage = sm;
-                                config = getConfig();
-                                config.set("start_message", sm);
+                                if(sm.equalsIgnoreCase("none")) {
+                                    config = getConfig();
+                                    config.set("start_message", null);
+                                } else {
+                                    config = getConfig();
+                                    config.set("start_message", sm);
+                                }
                                 saveConfig();
-                                reloadConfig();
+                                initialize();
                                 sender.sendMessage(ChatColor.GRAY + "[INFO] 開始メッセージを更新しました。");
                                 return true;
                             case "setendmessage":
                                 String em = args[1].replace("&", "§");
-                                endMessage = em;
-                                config = getConfig();
-                                config.set("end_message", em);
+                                if (em.equalsIgnoreCase("none")) {
+                                    config = getConfig();
+                                    config.set("end_message", null);
+                                } else {
+                                    config = getConfig();
+                                    config.set("end_message", em);
+                                }
+
                                 saveConfig();
-                                reloadConfig();
+                                initialize();
                                 sender.sendMessage(ChatColor.GRAY + "[INFO] 終了メッセージを更新しました。");
                                 return true;
                             case "setcancelmessage":
                                 String cm = args[1].replace("&", "§");
-                                endMessage = cm;
-                                config = getConfig();
-                                config.set("cancel_message", cm);
+                                if (cm.equalsIgnoreCase("none")) {
+                                    config = getConfig();
+                                    config.set("cancel_message",  null);
+                                } else {
+                                    config = getConfig();
+                                    config.set("cancel_message", cm);
+                                }
                                 saveConfig();
-                                reloadConfig();
+                                initialize();
                                 sender.sendMessage(ChatColor.GRAY + "[INFO] キャンセル時のメッセージを更新しました。");
                                 return true;
                             case "showtps":
@@ -228,9 +239,9 @@ public final class WorldRiptideCanceller extends JavaPlugin {
         WorldRiptideCanceller.isEnable        = this.config.getBoolean("enable");
         WorldRiptideCanceller.tpsThreshold    = this.config.getDouble ("tps_threshold");
         WorldRiptideCanceller.updateFrequency = this.config.getInt    ("update_frequency");
-        WorldRiptideCanceller.startMessage    = this.config.getString ("start_message");
-        WorldRiptideCanceller.endMessage      = this.config.getString ("end_message");
-        WorldRiptideCanceller.cancelMessage   = this.config.getString ("cancel_message");
+        WorldRiptideCanceller.startMessage    = this.config.getString ("start_message", null);
+        WorldRiptideCanceller.endMessage      = this.config.getString ("end_message", null);
+        WorldRiptideCanceller.cancelMessage   = this.config.getString ("cancel_message", null);
         this.reloadConfig();
     }
 
