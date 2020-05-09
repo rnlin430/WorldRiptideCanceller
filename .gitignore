@@ -1,7 +1,7 @@
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
-# ƒ†[ƒU[ŒÅ—L‚Ìƒtƒ@ƒCƒ‹
+# ï¿½ï¿½ï¿½[ï¿½Uï¿½[ï¿½Å—Lï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
@@ -20,7 +20,7 @@
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
 
-# CMakeƒRƒ“ƒpƒCƒ‰‚Ìƒtƒ@ƒCƒ‹
+# CMakeï¿½Rï¿½ï¿½ï¿½pï¿½Cï¿½ï¿½ï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½
 cmake-build-*/
 
 # Mongo Explorer plugin
@@ -71,3 +71,8 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
+.gradle/4.4.1/taskHistory/taskHistory.lock
+.gradle/4.4.1/fileHashes/fileHashes.lock
+.gradle/4.4.1/fileContent/fileContent.lock
+.gradle/4.4.1/fileHashes/fileHashes.bin
+.gradle/4.4.1/taskHistory/taskHistory.bin

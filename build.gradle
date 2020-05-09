@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'idea'
 version = pluginVersion
 //apply from: 'version.gradle'
 group = pluginGroup
