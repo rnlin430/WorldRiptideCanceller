@@ -7,10 +7,10 @@ description: WorldRiptideCanceller
 commands:
   wrc:
     description: It's main commands of this plugin.
-    aliases: [wr]
+    aliases: [worldriptidecanceller]
     usage:
       /<command>
-      /wr
+      /wrc
     permisson: worldriptidecanceller.command.wr
     permission-message: You don't have the permission "<permission>".
 
