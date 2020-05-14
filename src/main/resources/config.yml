@@ -1,7 +1,7 @@
 # update_frequency: 40(tick)
 enable: true
 tps_threshold: 17
-update_frequency: 40
+update_frequency: 1200
 start_message: "§l§nStart message"
 end_message: "§l§nEnd message"
 cancel_message: "§7cancel message"

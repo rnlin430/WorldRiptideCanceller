@@ -1,5 +1,5 @@
 name: WorldRiptideCanceller
-version: @version@
+version: 2.0.3-SNAPSHOT
 main: com.github.rnlin430.worldriptidecanceller.WorldRiptideCanceller
 api-version: 1.15
 description: WorldRiptideCanceller
@@ -12,7 +12,7 @@ commands:
       /<command>
       /wrc
     permisson: worldriptidecanceller.command.wr
-    permission-message: You don't have the permission "<permission>".
+    permission-message: You don't have the permission <permission>.
 
 
 permissions:
