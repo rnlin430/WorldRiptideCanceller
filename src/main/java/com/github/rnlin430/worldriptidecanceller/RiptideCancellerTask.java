@@ -27,16 +27,15 @@ public class RiptideCancellerTask extends BukkitRunnable {
         if(isRestricted){
             if(tps[0] <= WorldRiptideCanceller.tpsThreshold){
                 if (WorldRiptideCanceller.startMessage != null)
-                plugin.getServer().broadcastMessage(WorldRiptideCanceller.startMessage);
+                    plugin.getServer().broadcastMessage(WorldRiptideCanceller.startMessage);
                 isRestricted = false;
                 return;
             }
         } else if(!isRestricted) {
             if (tps[0] > WorldRiptideCanceller.tpsThreshold) {
-                if (WorldRiptideCanceller.endMessage != null) {
+                if (WorldRiptideCanceller.endMessage != null)
                     plugin.getServer().broadcastMessage(WorldRiptideCanceller.endMessage);
-                    isRestricted = true;
-                }
+                isRestricted = true;
                 return;
             }
         }

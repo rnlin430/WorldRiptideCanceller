@@ -1,5 +1,5 @@
 name: WorldRiptideCanceller
-version: 2.0.3-SNAPSHOT
+version: @version@
 main: com.github.rnlin430.worldriptidecanceller.WorldRiptideCanceller
 api-version: 1.15
 description: WorldRiptideCanceller

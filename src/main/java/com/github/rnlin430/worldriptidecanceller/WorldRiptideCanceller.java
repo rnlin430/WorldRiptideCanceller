@@ -62,7 +62,7 @@ public final class WorldRiptideCanceller extends JavaPlugin {
             switch (args.length) {
                 case 0:
                     displayInfo(sender);
-                    break;
+                    return true;
                 case 1:
                     if (args[0].equalsIgnoreCase("true")) {
                         isEnable = true;
@@ -266,10 +266,11 @@ public final class WorldRiptideCanceller extends JavaPlugin {
 
     private void displayInfo(CommandSender sender) {
         sender.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "- WorldRiptideCanceller -");
-        sender.sendMessage(ChatColor.WHITE + "SpigotAPIバージョン : " + getDescription().getAPIVersion());
-        sender.sendMessage(ChatColor.WHITE + "Pluginバージョン : " + getDescription().getVersion());
-        sender.sendMessage(ChatColor.RED + "ダウンロードURL : " + getSiteURL());
-        sender.sendMessage(ChatColor.DARK_BLUE + "Developed by rnlin(Twitter: @rnlin)");
+        sender.sendMessage(ChatColor.WHITE + "SpigotAPIバージョン: " + getDescription().getAPIVersion());
+        sender.sendMessage(ChatColor.WHITE + "Pluginバージョン: " + getDescription().getVersion());
+        sender.sendMessage(ChatColor.WHITE + "コマンド一覧: " + ChatColor.AQUA  + "/wrc commands");
+        sender.sendMessage(ChatColor.GREEN + "ダウンロードURL: " + getSiteURL());
+        sender.sendMessage(ChatColor.BLUE + "Developed by rnlin(Twitter: @rnlin)");
         sender.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "--------");
     }
 
